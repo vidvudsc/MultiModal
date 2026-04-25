@@ -6,17 +6,16 @@ The current model is a roughly 14.7M parameter decoder-only Transformer. It acce
 
 ## Current Status
 
-The latest published checkpoint is the clean pretrained `~68k` step run. It is a pretrained base model, not an instruction-tuned assistant yet.
+The latest checkpoint is the clean pretrained `~68k` step run. It is a pretrained base model, not an instruction-tuned assistant yet. The weights are intended to be hosted on Hugging Face at [vidvuds/MLM](https://huggingface.co/vidvuds/MLM).
 
 Expected behavior:
 
 - Text prompts usually continue as short stories or simple explanations.
 - Image prompts can produce short caption-like outputs.
-- Colors and broad scene cues are starting to work.
+- The 68k pretrained model shows early signs of visual grounding, especially around color words and broad scene cues.
+- The vision side is still pretty bad: object identity, counting, spatial details, and robust VQA are weak.
 - Fine-grained visual recognition is still weak.
 - Chat behavior needs SFT.
-
-The checkpoint is too large for normal Git history, so it is published as a GitHub Release asset.
 
 ## Repository Layout
 
@@ -105,10 +104,18 @@ pip install -r requirements.txt
 
 ## Run The Pretrained 68k Model
 
-Download the checkpoint release asset and place it here:
+Download or upload the checkpoint through the Hugging Face model repo, then place it here locally:
 
 ```text
 models/pretrained_68k/ckpt_last.pt
+```
+
+For example, after installing the Hugging Face CLI:
+
+```bash
+brew install hf
+hf auth login
+hf upload vidvuds/MLM models/pretrained_68k
 ```
 
 Then run:
@@ -224,4 +231,3 @@ This is a tiny educational model. It should be treated as a toy research artifac
 - sensitive to prompt format and decoding settings
 
 The useful part is that the entire multimodal path is small enough to inspect, train, modify, and understand end to end.
-
