@@ -53,6 +53,53 @@ The model is a compact decoder-only GPT-style network:
 - 128x128 images
 - 16x16 image patches, giving 64 image patch tokens
 
+### Model Diagram
+
+```mermaid
+flowchart TD
+    subgraph text_path["Text path"]
+        prompt["Text prompt / caption prefix"]
+        bpe["ByteLevel BPE tokenizer\n8192 vocab + special tokens"]
+        ids["Token IDs"]
+        tok_emb["Token embedding\nid -> 304-d vector"]
+    end
+
+    subgraph image_path["Optional image path"]
+        image["RGB image"]
+        resize["Resize / crop\n128 x 128"]
+        patches["Patchify with unfold\n64 patches of 16 x 16 x 3"]
+        patch_proj["Linear patch projection\n768 -> 304"]
+        img_pos["Learned image patch positions\n64 x 304"]
+        img_tokens["Image patch tokens\n64 x 304"]
+    end
+
+    subgraph sequence["One causal sequence"]
+        markers["<|bos|> <|image|> ... <|/image|> text"]
+        replace["Replace image placeholder slots\nwith projected patch vectors"]
+        pos_emb["Add learned text position embeddings\nmax sequence length 512"]
+    end
+
+    subgraph transformer["TinyNativeMultimodalGPT"]
+        block1["Transformer block x 8"]
+        attn["RMSNorm -> causal self-attention\n8 heads, head dim 38"]
+        mlp["RMSNorm -> SwiGLU MLP"]
+        final_norm["Final RMSNorm"]
+        head["Tied LM head\n304 -> 8192 logits"]
+    end
+
+    output["Next-token distribution"]
+    sample["Sample / choose next token"]
+    text_out["Generated text"]
+
+    prompt --> bpe --> ids --> tok_emb --> markers
+    image --> resize --> patches --> patch_proj --> img_tokens
+    img_pos --> img_tokens
+    markers --> replace
+    img_tokens --> replace
+    replace --> pos_emb --> block1
+    block1 --> attn --> mlp --> final_norm --> head --> output --> sample --> text_out
+```
+
 For text-only input, the model behaves like a normal causal language model.
 
 For image input, an image is resized, split into 16x16 patches, projected into the model hidden size, and inserted into the token sequence:
