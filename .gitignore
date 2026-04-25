@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local environments and caches
+.venv/
+venv/
+.cache/
+
+# Large local experiment history
+legacy/
+runs/
+
+# Checkpoints are published as GitHub Release assets instead of Git blobs.
+*.pt
+*.pth
+*.safetensors
+
+# Transfer archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+

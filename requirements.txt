@@ -1,0 +1,7 @@
+torch>=2.2
+datasets>=2.19
+tokenizers>=0.15
+tqdm>=4.66
+pillow>=10.0
+hf_transfer>=0.1.6
+google-genai>=1.0.0

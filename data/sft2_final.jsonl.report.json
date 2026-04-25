@@ -1,0 +1,27 @@
+{
+  "rows": 5897,
+  "image_rows": 3300,
+  "text_rows": 2597,
+  "kinds": {
+    "image_match": 557,
+    "image_detail": 551,
+    "image_caption": 550,
+    "image_story": 550,
+    "image_vqa": 549,
+    "image_unclear": 543,
+    "explanation": 457,
+    "fact": 441,
+    "helpful": 341,
+    "math": 288,
+    "story": 271,
+    "continuation": 221,
+    "uncertainty": 200,
+    "rewrite": 200,
+    "summary": 130,
+    "definition": 22,
+    "chat": 20,
+    "yes/no question": 3,
+    "why": 2,
+    "how": 1
+  }
+}
